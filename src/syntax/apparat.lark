@@ -17,8 +17,8 @@ infix: ID ID ID "=" expr
      | equ "or" expr  -> disj
 
 ?equ: compare
-    | compare "is" equ
-    | compare "is" "not" equ
+    | compare "is" equ        -> equ
+    | compare "is" "not" equ  -> nequ
 
 ?compare: sum
         | sum "<" compare  -> lt
