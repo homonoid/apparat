@@ -31,7 +31,7 @@ def main(argv):
       elif arg in ['-help', '-h']:
         enableRepl = False # so we exit right after we print
 
-        print ('Usage:\n apparat [PARAM] {FILE1 FILE2} ...\n\n' \
+        print ('Usage:\n apparat [PARAM] {FILE}\n\n' \
                'PARAMs:\n -help, -h  -- print this message\n' \
                         ' -ast, -a   -- verbose AST\n' \
                         ' -bytes, -b -- verbose bytecode\n\n' \
