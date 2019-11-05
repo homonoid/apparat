@@ -18,19 +18,22 @@ def main():
 
   while True:
     source = input(Color('{autogreen}~{/green} '))
-    count = source.count
 
-    while [count('{'), count('('), count('[')] != [count('}'), count(')'), count(']')]:
-      source += '\n' +  input('... ')
+    if len(source.strip()) > 0:
       count = source.count
-
-    try:
-      ast = parser.parse(source).pretty()
-      print(ast)
-    except LarkError as err:
-      head = Color('{autored}=== SORRY! ==={/red}')
-      print(f'\033[1;m{head}\033[0m\n Syntax error caused by \'{source[err.pos_in_stream]}\'',
-            f'at line {err.line}, column {err.column} (of <stdin>)\n')
+  
+      while [count('{'), count('('), count('[')] != [count('}'), count(')'), count(']')]:
+        source += '\n' +  input('... ')
+        count = source.count
+      
+      try:
+        ast = parser.parse(source).pretty()
+        print(ast)
+      except LarkError as err:
+        head = Color('{autored}=== SORRY! ==={/red}')
+        cause = source[err.pos_in_stream]
+        print(f'\033[1;m{head}\033[0m\n Syntax error caused by \'{cause}\'',
+              f'at line {err.line}, column {err.column} (of <stdin>)\n')
 
 if __name__ == '__main__':
   main()
