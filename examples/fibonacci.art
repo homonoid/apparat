@@ -1,0 +1,8 @@
+-- Define the function.
+fib = |n| n <= 1 => 1 else fib(n - 1) + fib(n + 1);
+
+-- Make some numbers to test it.
+nums = 1 to 10;
+
+-- Process!
+print -> fib -> nums

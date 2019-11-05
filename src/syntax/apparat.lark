@@ -17,8 +17,8 @@ infix: ID ID ID "=" expr
      | equ "or" expr  -> disj
 
 ?equ: compare
-    | compare "is" equ        -> equ
-    | compare "is" "not" equ  -> nequ
+    | compare "is" "not" equ -> nequ
+    | compare "is" equ       -> equ
 
 ?compare: sum
         | sum "<" compare  -> lt
@@ -36,8 +36,13 @@ infix: ID ID ID "=" expr
         | molecule "mod" product -> mod
 
 ?molecule: atom
-         | "(" (atom | INFIX) ")" molecule -> distribute
-         | atom "^" molecule             -> pow
+         | distribute
+         | "-" molecule   -> neg
+         | "!" molecule   -> inv
+         | "+" molecule   -> pos
+         | atom "^" molecule -> pow
+
+distribute: (INFIX | atom) "->" expr
 
 ?atom: list
      | num
@@ -47,8 +52,6 @@ infix: ID ID ID "=" expr
      | call
      | field
      | range
-     | "-" atom -> neg
-     | "+" atom -> pos
      | "(" expr ")"
      | "{" _NL? (node (";" _NL? node | _NL)* [";"] _NL?)? "}" -> block
      | "|" ID ("," ID)* "|" expr -> lambda
@@ -80,12 +83,12 @@ BIN.2: /0b[01]+/
 HEX.2: /0x[0-9A-fa-f]+/
 OCT.2: /0o[0-7]+/
 TCHAR: /[^\n"\\\{]|\\[ntvr]/
-INFIX.2: "+" | "-" | "*" | "/" | "mod" | "and" | "or" 
-     |  "is" "not" | "is" | "<=" | ">=" | "<" | ">"
+INFIX.2: "+" | "-" | "*" | "/" | "^" | "mod" | "and" | "or" 
+       | "isnt" | "is" | "<=" | ">=" | "<" | ">"
 
-_COMMENT: "--" /[^\n]/*
-_NL: /(\r?\n)+\s*/
+COMMENT.2: /--[^\n]*/ _NL
+_NL: /\r?\n[\t ]*/+
 
 %import common.WS_INLINE
 %ignore WS_INLINE
-%ignore _COMMENT
+%ignore COMMENT
