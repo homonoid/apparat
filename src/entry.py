@@ -1,4 +1,3 @@
-from syntax.parse import Lark_StandAlone, LarkError
 from colorclass import Color
 import readline
 
@@ -6,7 +5,11 @@ def error(message):
   head = Color('{autored}=== SORRY! ==={/red}')
   print(f'\033[1;m{head}\033[0m\n{message}\n')
 
-def parse(parser, source, filename = 'in'):
+def parse(source, filename = 'in'):
+  from syntax.parse import Lark_StandAlone, LarkError
+  
+  parser = Lark_StandAlone()
+
   try:
     return True, parser.parse(source)
   except LarkError as err:
@@ -18,8 +21,6 @@ def parse(parser, source, filename = 'in'):
     return False, ()
 
 def main(argv):
-  parser = Lark_StandAlone()
-
   justParse, enableRepl = False, True
 
   try:
@@ -41,7 +42,7 @@ def main(argv):
 
         with open(arg, 'r') as source:
           if justParse:
-            status, ast = parse(parser, source.read(), arg)
+            status, ast = parse(source.read(), arg)
             print(ast.pretty()) if status is not False else None
 
     if enableRepl:
@@ -56,7 +57,7 @@ def main(argv):
             count = source.count
           
           if justParse:
-            status, ast = parse(parser, source)
+            status, ast = parse(source)
             print(ast.pretty()) if status is not False else None
             
   except FileNotFoundError as err:
