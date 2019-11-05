@@ -6,4 +6,4 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '../src'))
 
 from entry import main
 
-main()
+main(sys.argv[1:])

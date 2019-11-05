@@ -1,0 +1,3 @@
+fact = |n| (*) n to 1; -- define the function
+nums = [5 10 20 30];   -- make some numbers for testing
+(print) (fact) nums    -- print their factorials

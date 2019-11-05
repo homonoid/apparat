@@ -1,7 +1,7 @@
-root: node (";" node)* [";"]
+root: node (";" _NL? node | _NL)* [";"]
 
-?node: stmt
-     | expr
+?node: stmt _NL?
+     | expr _NL?
 
 ?stmt: decl
      | infix
@@ -36,8 +36,8 @@ infix: ID ID ID "=" expr
         | molecule "mod" product -> mod
 
 ?molecule: atom
-         | "(" (ID | INFIX) ")" atom -> distribute
-         | atom "^" molecule -> pow
+         | "(" (atom | INFIX) ")" molecule -> distribute
+         | atom "^" molecule             -> pow
 
 ?atom: list
      | num
@@ -50,10 +50,10 @@ infix: ID ID ID "=" expr
      | "-" atom -> neg
      | "+" atom -> pos
      | "(" expr ")"
-     | "{" (node (";" node)* [";"])? "}" -> block
+     | "{" _NL? (node (";" _NL? node | _NL)* [";"] _NL?)? "}" -> block
      | "|" ID ("," ID)* "|" expr -> lambda
      
-list: "[" atom* "]"
+list: "[" _NL? atom* _NL? "]"
 
 ?num: DECIMAL -> decimal
     | FRACT   -> fractional
@@ -67,7 +67,7 @@ range: atom "to" atom
 
 accessor: atom "[" atom "]"
 
-call: atom "(" [expr ("," expr)*] ")"
+call: atom "(" _NL? [expr ("," expr)* _NL?] ")"
 
 field: atom ("." ID)+
 
@@ -83,6 +83,9 @@ TCHAR: /[^\n"\\\{]|\\[ntvr]/
 INFIX.2: "+" | "-" | "*" | "/" | "mod" | "and" | "or" 
      |  "is" "not" | "is" | "<=" | ">=" | "<" | ">"
 
+_COMMENT: "--" /[^\n]/*
+_NL: /(\r?\n)+\s*/
 
-%import common.WS
-%ignore WS
+%import common.WS_INLINE
+%ignore WS_INLINE
+%ignore _COMMENT
