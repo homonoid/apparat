@@ -5,4 +5,4 @@ fact = |n| * -> n to 1;
 nums = [5 10 20 30];
 
 -- Process!
-print -> fact -> nums.
+print -> fact -> nums
